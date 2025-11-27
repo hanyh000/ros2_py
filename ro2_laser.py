@@ -47,7 +47,7 @@ while(True) :
             if front_dist < safe_dist:
                 action = "turn_left" if left_dist >= right_dist else "turn_right"
             elif front_dist < safe_dist and left_dist <safe_dist and right_dist <safe_dist:
-                action = "trun_back"
+                action = "go_back"
             else:
                 action = "go_forward"
 
@@ -56,6 +56,41 @@ while(True) :
             print("right:", round(right_dist, 2))
             print("action:", action)
             print(pattern_name)
+            if action == 'go_forward':
+                talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
+                message = roslibpy.Message({
+                    'linear': {'x': 2.0, 'y': 0.0, 'z': 0.0},
+                    'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+                })
+                talker.publish(message)
+            elif action == 'turn_left':
+                talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
+                message = roslibpy.Message({
+                    'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+                    'angular': {'x': 0.0, 'y': 0.0, 'z': 1.55}
+                })
+                talker.publish(message)
+            elif action == 'turn_right':
+                talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
+                message = roslibpy.Message({
+                    'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+                    'angular': {'x': 0.0, 'y': 0.0, 'z': -1.55}
+                })
+                talker.publish(message)
+            elif action == 'go_back':
+                talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
+                message = roslibpy.Message({
+                    'linear': {'x': -2.0, 'y': 0.0, 'z': 0.0},
+                    'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+                })
+                talker.publish(message)
+            else :
+                talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
+                message = roslibpy.Message({
+                    'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+                    'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+                })
+                talker.publish(message)
         except Exception as e:
             print("불러오기 실패:", e)
     time.sleep(2)

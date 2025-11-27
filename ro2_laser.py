@@ -44,10 +44,10 @@ while(True) :
 
             safe_dist = 1.3 
 
-            if front_dist < safe_dist:
-                action = "turn_left" if left_dist >= right_dist else "turn_right"
-            elif front_dist < safe_dist and left_dist <safe_dist and right_dist <safe_dist:
+            if front_dist < safe_dist and left_dist < safe_dist and right_dist < safe_dist:
                 action = "go_back"
+            elif front_dist < safe_dist:
+                action = "turn_left" if left_dist >= right_dist else "turn_right"
             else:
                 action = "go_forward"
 

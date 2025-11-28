@@ -1,6 +1,17 @@
 import roslibpy
+import pymysql
 import time
 import numpy as np
+
+import json
+
+DB_CONFIG = dict(
+    host="localhost",
+    user="root",
+    password="as6106",
+    database="lidar",
+    charset="utf8"
+)
 
 HOST = '127.0.0.1' 
 PORT = 9090
@@ -26,6 +37,9 @@ def callback(message):
 pose_topic = roslibpy.Topic(client, '/laser_val/laserpub', 'laser_package_msgs/msg/Laser')
 pose_topic.subscribe(callback)
 
+
+db = (DB_CONFIG)
+conn = pymysql.connect(**db)
 
 while(True) :
     if laser is None:
@@ -56,6 +70,16 @@ while(True) :
             print("right:", round(right_dist, 2))
             print("action:", action)
             print(pattern_name)
+
+            ranges = json.dumps(ranges)
+
+
+            with conn.cursor() as cur:
+                sql = "INSERT INTO `lidardata` (`ranges`, `pattern_name`, `action`) VALUES (%s, %s, %s)"
+                cur.execute(sql, (ranges, pattern_name, action))
+            conn.commit()
+            print("DB에 저장 완료")
+
             if action == 'go_forward':
                 talker = roslibpy.Topic(client, '/turtle1/cmd_vel', 'geometry_msgs/msg/Twist')
                 message = roslibpy.Message({
@@ -93,4 +117,5 @@ while(True) :
                 talker.publish(message)
         except Exception as e:
             print("불러오기 실패:", e)
+            print("DB 오류:", e)
     time.sleep(2)

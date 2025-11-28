@@ -73,7 +73,6 @@ while(True) :
 
             ranges = json.dumps(ranges)
 
-
             with conn.cursor() as cur:
                 sql = "INSERT INTO `lidardata` (`ranges`, `pattern_name`, `action`) VALUES (%s, %s, %s)"
                 cur.execute(sql, (ranges, pattern_name, action))

@@ -40,7 +40,6 @@ def callback(message):
 pose_topic = roslibpy.Topic(client, '/laser_val/laserpub', 'laser_package_msgs/msg/Laser')
 pose_topic.subscribe(callback)
 
-
 db = (DB_CONFIG)
 conn = pymysql.connect(**db)
 
